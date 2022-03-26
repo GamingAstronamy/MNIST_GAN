@@ -1,16 +1,20 @@
-import tensorflow as tf
+import cv2
 import numpy as np
-import matplotlib.pyplot as plt
-# from helpers import GAN
+import tensorflow as tf
+from helpers import GAN
+
 
 def main():
-#     gan = GAN(100, 256, 2, (5,5), (28, 28, 1))
-    pass
-#     noise = tf.random.normal([1, 100])
-#     generated_image = gan.generator(noise, training=False)
+    tf.random.set_seed(42)
+    
+    gan = GAN(100, 256, 2, (5,5), (28, 28, 1))
 
-#     plt.imshow(generated_image[0, :, :, 0], cmap='gray')
+    (train_images, train_labels), (_, _) = tf.keras.datasets.mnist.load_data()
+    train_images = train_images.reshape(train_images.shape[0], 28, 28, 1).astype('float32')
+    train_images = (train_images - 127.5) / 127.5
+    
+    gan.train(train_images, 1)
+    gan.save('model/')
 
 if __name__ == '__main__':
-    with tf.device('/CPU:0'):
-        main()
+    main()
